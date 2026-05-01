@@ -44,6 +44,12 @@ public class QuestionService {
                 .orElseThrow(() -> new RuntimeException("Question not found with id: " + id));
 
         question.setQuestionText(updatedQuestion.getQuestionText());
+
+        question.setOptionA(updatedQuestion.getOptionA());
+        question.setOptionB(updatedQuestion.getOptionB());
+        question.setOptionC(updatedQuestion.getOptionC());
+        question.setOptionD(updatedQuestion.getOptionD());
+
         question.setAnswer(updatedQuestion.getAnswer());
         question.setDifficulty(updatedQuestion.getDifficulty());
         question.setCategory(updatedQuestion.getCategory());

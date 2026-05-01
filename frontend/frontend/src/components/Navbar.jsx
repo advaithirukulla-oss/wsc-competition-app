@@ -34,8 +34,9 @@ function Navbar() {
         <Link to="/register" style={linkStyle}>Register</Link>
         <Link to="/challenge" style={linkStyle}>Challenge</Link>
         <Link to="/bowl" style={linkStyle}>Bowl</Link>
-        <Link to="/leaderboard" style={linkStyle}>Bowl Leaderboard</Link>
+        <Link to="/leaderboard" style={linkStyle}>Bowl Board</Link>
         <Link to="/overall" style={linkStyle}>Overall</Link>
+        <Link to="/reports" style={linkStyle}>Reports</Link>
         <Link to="/writing" style={linkStyle}>Writing</Link>
         <Link to="/writingleaderboard" style={linkStyle}>Writing Board</Link>
         <Link to="/admin" style={linkStyle}>Admin</Link>

@@ -12,6 +12,7 @@ import Admin from "./pages/Admin";
 import WritingLeaderboard from "./pages/WritingLeaderboard";
 import BowlChallenge from "./pages/BowlChallenge";
 import CombinedLeaderboard from "./pages/CombinedLeaderboard";
+import Reports from "./pages/Reports";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/bowl" element={<BowlChallenge />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/overall" element={<CombinedLeaderboard />} />
+          <Route path="/reports" element={<Reports />} />
           <Route path="/writing" element={<Writing />} />
           <Route path="/writingleaderboard" element={<WritingLeaderboard />} />
           <Route path="/admin" element={<Admin />} />

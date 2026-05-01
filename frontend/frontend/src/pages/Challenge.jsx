@@ -2,13 +2,9 @@ import { useEffect, useState } from "react";
 
 function Challenge() {
   const [questions, setQuestions] = useState([]);
-  const [participantName, setParticipantName] = useState("");
+  const [selectedAnswers, setSelectedAnswers] = useState({});
   const [message, setMessage] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [answered, setAnswered] = useState(false);
 
-  // Load questions from backend
   useEffect(() => {
     fetch("http://localhost:8080/api/questions")
       .then((response) => response.json())
@@ -16,115 +12,145 @@ function Challenge() {
       .catch((error) => console.error("Error loading questions:", error));
   }, []);
 
-  // Submit answer
-  const handleSubmitAnswer = async (questionId, selectedAnswer) => {
-    if (answered) return;
+  const selectAnswer = (questionId, answer) => {
+    setSelectedAnswers({
+      ...selectedAnswers,
+      [questionId]: answer
+    });
+  };
 
-    if (!participantName.trim()) {
-      setMessage("Please enter participant name first");
+  const submitAnswer = (question) => {
+    const selectedAnswer = selectedAnswers[question.id];
+
+    if (!selectedAnswer) {
+      setMessage("Please select an answer first.");
       return;
     }
 
-    const submissionData = {
-      participantName: participantName,
-      selectedAnswer: selectedAnswer
-    };
-
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/submissions/${questionId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(submissionData)
+    fetch("http://localhost:8080/api/submissions/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: localStorage.getItem("loggedInUser") || "Guest",
+        questionId: question.id,
+        submittedAnswer: selectedAnswer,
+        timeLeft: 0
+      })
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.correct) {
+          setMessage("Correct answer!");
+        } else {
+          setMessage("Wrong answer.");
         }
-      );
-
-      const data = await response.json();
-
-      if (data.correct) {
-        setMessage("✅ Correct answer!");
-        setScore(score + 1);
-      } else {
-        setMessage("❌ Wrong answer!");
-      }
-
-      setAnswered(true);
-    } catch (error) {
-      setMessage("Error submitting answer");
-      console.error(error);
-    }
+      })
+      .catch((error) => {
+        console.error("Error submitting answer:", error);
+        setMessage("Error submitting answer.");
+      });
   };
 
   return (
-    <div>
-      <h2>Challenge Round</h2>
+    <div style={pageCard}>
+      <h2>Challenge Questions</h2>
 
-      <input
-        placeholder="Enter participant name"
-        value={participantName}
-        onChange={(e) => setParticipantName(e.target.value)}
-      />
-      <br /><br />
-
-      <h3>Score: {score}</h3>
+      {message && <p style={{ fontWeight: "bold" }}>{message}</p>}
 
       {questions.length === 0 ? (
-        <p>No questions available</p>
+        <p>No questions found.</p>
       ) : (
-        <div>
-          <h3>{questions[currentIndex].questionText}</h3>
+        questions.map((question) => (
+          <div key={question.id} style={questionCard}>
+            <h3>{question.questionText}</h3>
 
-          <button
-            onClick={() => handleSubmitAnswer(questions[currentIndex].id, "A")}
-          >
-            A. {questions[currentIndex].optionA}
-          </button>
-          <br /><br />
+            <div style={optionsBox}>
+              <button
+                style={optionButton}
+                onClick={() => selectAnswer(question.id, question.optionA)}
+              >
+                A. {question.optionA || "Option A missing"}
+              </button>
 
-          <button
-            onClick={() => handleSubmitAnswer(questions[currentIndex].id, "B")}
-          >
-            B. {questions[currentIndex].optionB}
-          </button>
-          <br /><br />
+              <button
+                style={optionButton}
+                onClick={() => selectAnswer(question.id, question.optionB)}
+              >
+                B. {question.optionB || "Option B missing"}
+              </button>
 
-          <button
-            onClick={() => handleSubmitAnswer(questions[currentIndex].id, "C")}
-          >
-            C. {questions[currentIndex].optionC}
-          </button>
-          <br /><br />
+              <button
+                style={optionButton}
+                onClick={() => selectAnswer(question.id, question.optionC)}
+              >
+                C. {question.optionC || "Option C missing"}
+              </button>
 
-          <button
-            onClick={() => handleSubmitAnswer(questions[currentIndex].id, "D")}
-          >
-            D. {questions[currentIndex].optionD}
-          </button>
+              <button
+                style={optionButton}
+                onClick={() => selectAnswer(question.id, question.optionD)}
+              >
+                D. {question.optionD || "Option D missing"}
+              </button>
+            </div>
 
-          <br /><br />
+            <p>
+              <strong>Selected:</strong>{" "}
+              {selectedAnswers[question.id] || "None"}
+            </p>
 
-          {currentIndex < questions.length - 1 ? (
-            <button
-              onClick={() => {
-                setCurrentIndex(currentIndex + 1);
-                setAnswered(false);
-                setMessage("");
-              }}
-            >
-              Next Question
+            <button style={submitButton} onClick={() => submitAnswer(question)}>
+              Submit Answer
             </button>
-          ) : (
-            <p>Quiz finished 🎉</p>
-          )}
-        </div>
+          </div>
+        ))
       )}
-
-      <p>{message}</p>
     </div>
   );
 }
+
+const pageCard = {
+  backgroundColor: "white",
+  padding: "25px",
+  borderRadius: "12px",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
+};
+
+const questionCard = {
+  backgroundColor: "#f8fafc",
+  padding: "18px",
+  marginBottom: "18px",
+  borderRadius: "10px",
+  border: "1px solid #e2e8f0"
+};
+
+const optionsBox = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+  gap: "10px",
+  marginTop: "15px",
+  marginBottom: "15px"
+};
+
+const optionButton = {
+  backgroundColor: "#e2e8f0",
+  border: "1px solid #cbd5e1",
+  padding: "12px",
+  borderRadius: "8px",
+  cursor: "pointer",
+  textAlign: "left"
+};
+
+const submitButton = {
+  backgroundColor: "#2563eb",
+  color: "white",
+  border: "none",
+  padding: "12px 18px",
+  borderRadius: "8px",
+  cursor: "pointer",
+  fontWeight: "bold"
+};
 
 export default Challenge;
