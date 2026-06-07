@@ -4,7 +4,7 @@ function QuestionPage() {
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/questions")
+    fetch("/api/questions")
       .then((response) => response.json())
       .then((data) => setQuestions(data))
       .catch((error) => console.error("Error loading questions:", error));

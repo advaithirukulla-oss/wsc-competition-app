@@ -8,7 +8,7 @@ function BowlChallenge() {
   const [finished, setFinished] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/questions")
+    fetch("/api/questions")
       .then((response) => response.json())
       .then((data) => setQuestions(data))
       .catch((error) => console.error(error));
@@ -37,7 +37,7 @@ function BowlChallenge() {
       return;
     }
 
-    fetch("http://localhost:8080/api/submissions/create", {
+    fetch("/api/submissions/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

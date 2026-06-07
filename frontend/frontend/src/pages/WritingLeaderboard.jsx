@@ -5,7 +5,7 @@ function WritingLeaderboard() {
   const [message, setMessage] = useState("Loading...");
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/writing-leaderboard")
+    fetch("/api/writing-leaderboard")
       .then((res) => res.json())
       .then((data) => {
         console.log("Writing leaderboard data:", data);

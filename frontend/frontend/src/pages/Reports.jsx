@@ -4,7 +4,7 @@ function Reports() {
   const [report, setReport] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/reports/summary")
+    fetch("/api/reports/summary")
       .then((response) => response.json())
       .then((data) => setReport(data))
       .catch((error) => console.error("Error loading reports:", error));

@@ -7,7 +7,7 @@ function BowlChallenge() {
   const [timeLeft, setTimeLeft] = useState(15);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/questions")
+    fetch("/api/questions")
       .then((response) => response.json())
       .then((data) => setQuestions(data));
   }, []);
@@ -30,7 +30,7 @@ function BowlChallenge() {
   const submitAnswer = () => {
     const currentQuestion = questions[currentIndex];
 
-    fetch("http://localhost:8080/api/submissions/create", {
+    fetch("/api/submissions/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

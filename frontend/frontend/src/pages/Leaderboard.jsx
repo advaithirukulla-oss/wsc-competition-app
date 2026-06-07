@@ -4,7 +4,7 @@ function Leaderboard() {
   const [leaders, setLeaders] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/leaderboard")
+    fetch("/api/leaderboard")
       .then((response) => response.json())
       .then((data) => setLeaders(data))
       .catch((error) => console.error("Error loading leaderboard:", error));

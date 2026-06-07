@@ -11,7 +11,7 @@ function Writing() {
 
   // Load writings
   const loadWritings = async () => {
-    const res = await fetch("http://localhost:8080/api/writing");
+    const res = await fetch("/api/writing");
     const data = await res.json();
     setWritings(data);
   };
@@ -25,7 +25,7 @@ function Writing() {
     const writingData = { participantName, title, content };
 
     try {
-      const res = await fetch("http://localhost:8080/api/writing/submit", {
+      const res = await fetch("/api/writing/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -51,7 +51,7 @@ function Writing() {
     const score = scores[id];
 
     try {
-      await fetch(`http://localhost:8080/api/writing/score/${id}`, {
+      await fetch(`/api/writing/score/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"

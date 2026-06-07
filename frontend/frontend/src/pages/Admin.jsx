@@ -5,14 +5,14 @@ function Admin() {
   const [tournaments, setTournaments] = useState([]);
 
   const loadQuestions = () => {
-    fetch("http://localhost:8080/api/questions")
+    fetch("/api/questions")
       .then((response) => response.json())
       .then((data) => setQuestions(data))
       .catch((error) => console.error("Error loading questions:", error));
   };
 
   const loadTournaments = () => {
-    fetch("http://localhost:8080/api/tournaments")
+    fetch("/api/tournaments")
       .then((response) => response.json())
       .then((data) => setTournaments(data))
       .catch((error) => console.error("Error loading tournaments:", error));
@@ -24,7 +24,7 @@ function Admin() {
   }, []);
 
   const deleteQuestion = (id) => {
-    fetch(`http://localhost:8080/api/questions/delete/${id}`, {
+    fetch(`/api/questions/delete/${id}`, {
       method: "DELETE"
     })
       .then(() => loadQuestions())
@@ -32,7 +32,7 @@ function Admin() {
   };
 
   const deleteTournament = (id) => {
-    fetch(`http://localhost:8080/api/tournaments/delete/${id}`, {
+    fetch(`/api/tournaments/delete/${id}`, {
       method: "DELETE"
     })
       .then(() => loadTournaments())

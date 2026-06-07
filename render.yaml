@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: wsc-competition-app
+    runtime: docker
+    plan: free
+    region: frankfurt
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: wsc-competition-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: wsc-competition-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: wsc-competition-db
+          property: password
+
+databases:
+  - name: wsc-competition-db
+    plan: free
+    region: frankfurt
+    databaseName: wsc
+    user: wsc

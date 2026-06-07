@@ -4,7 +4,7 @@ function CombinedLeaderboard() {
   const [leaders, setLeaders] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/combined-leaderboard")
+    fetch("/api/combined-leaderboard")
       .then((response) => response.json())
       .then((data) => setLeaders(data))
       .catch((error) => console.error("Error loading combined leaderboard:", error));
